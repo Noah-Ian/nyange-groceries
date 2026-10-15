@@ -1,10 +1,11 @@
 import {Router} from "express";
 import {authenticate} from "../middleware/auth.middleware.js";
 import {requireAdmin} from "../middleware/admin.middleware.js";
-import {create} from "../controllers/product.controller.js";
+import {create, getAll} from "../controllers/product.controller.js";
 
 const router = Router();
 
 router.post("/", authenticate,requireAdmin,create);
 
+router.get("/", getAll);
 export default router;

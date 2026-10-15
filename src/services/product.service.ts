@@ -14,3 +14,11 @@ export const createProduct = async (data:CreateProductInput
         },
     });
 };
+
+export const getAllProducts = async () => {
+    return prisma.product.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+}

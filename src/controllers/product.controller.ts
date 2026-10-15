@@ -1,6 +1,7 @@
-import {createProduct} from "../services/product.service.js";
+import {createProduct, getAllProducts } from "../services/product.service.js";
 import type{Request, Response} from "express";
 import { createProductSchema } from "../schemas/product.schema.js";
+
 
 export const create = async (
     req: Request,
@@ -20,6 +21,26 @@ export const create = async (
 
     res.status(500).json({
       message: "Failed to create product",
+    });
+  }
+};
+
+export const getAll = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const products = await getAllProducts();
+
+    res.status(200).json({
+      message: "Products retrieved successfully",
+      products,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to retrieve products",
     });
   }
 };
