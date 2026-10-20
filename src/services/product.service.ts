@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma.js"
-import type {CreateProductInput} from "../schemas/product.schema.js"
+import type {CreateProductInput, UpdateProductInput} from "../schemas/product.schema.js"
 
 export const createProduct = async (data:CreateProductInput
 ) => {
@@ -64,5 +64,29 @@ export const searchProducts = async (filters: ProductFilters) => {
     orderBy: {
       name: "asc",
     },
+  });
+};
+
+export const getProductById = async (id: number)=>{
+  return prisma.product.findUnique({
+    where:{id},
+  });
+}
+
+
+export const updateProduct = async (
+  id: number,
+  data: UpdateProductInput
+) => {
+  return prisma.product.update({
+    where: { id },
+    data,
+  });
+};
+
+
+export const deleteProduct = async (id: number) => {
+  return prisma.product.delete({
+    where: { id },
   });
 };
