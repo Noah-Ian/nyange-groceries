@@ -1,4 +1,4 @@
-import {createProduct, getAllProducts } from "../services/product.service.js";
+import {createProduct, getAllProducts, searchProducts } from "../services/product.service.js";
 import type{Request, Response} from "express";
 import { createProductSchema } from "../schemas/product.schema.js";
 
@@ -45,3 +45,29 @@ export const getAll = async (
   }
 };
     
+export const search = async (
+  req: Request,
+  res: Response
+) => {
+  try{
+    const{search, category, minPrice, maxPrice}= req.query;
+
+    const products = await searchProducts({
+      search: typeof search === "string" ? search : undefined,
+      category: typeof category === "string" ? category : undefined,
+      minPrice: typeof minPrice === "string"? Number(minPrice): undefined,
+      maxPrice: typeof maxPrice ==="string"? Number(maxPrice): undefined
+  });
+
+  res.status(200).json({
+    count: products.length,
+    products,
+  });
+}catch(error){
+  console.error(error);
+
+  res.status(500).json({
+    message:"Failed to search products"
+  });
+}
+};

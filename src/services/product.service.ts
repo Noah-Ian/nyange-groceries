@@ -22,3 +22,47 @@ export const getAllProducts = async () => {
       },
     });
 }
+
+interface ProductFilters {
+  search?: string;
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+export const searchProducts = async (filters: ProductFilters) => {
+  const { search, category, minPrice, maxPrice } = filters;
+
+  return prisma.product.findMany({
+    where: {
+      AND: [
+        search
+          ? {
+              name: {
+                contains: search,
+                mode: "insensitive",
+              },
+            }
+          : {},
+        category
+          ? {
+              category: {
+                equals: category,
+                mode: "insensitive",
+              },
+            }
+          : {},
+        minPrice !== undefined || maxPrice !== undefined
+          ? {
+              price: {
+                ...(minPrice !== undefined && { gte: minPrice }),
+                ...(maxPrice !== undefined && { lte: maxPrice }),
+              },
+            }
+          : {},
+      ],
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
+};
